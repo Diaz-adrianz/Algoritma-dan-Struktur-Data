@@ -1,88 +1,91 @@
 package teori;
 
-class CircularQueue {
-
-    private int maxSize;
-    private int[] queueArray;
-    private int front;
-    private int rear;
-
-    public CircularQueue(int size) {
-        maxSize = size;
-        queueArray = new int[maxSize];
-
-        front = -1;
-        rear = -1;
-    }
-
-    public void enqueue(int item) {
-        if (isEmpty()) {
-            front = 0;
-            rear = 0;
-            queueArray[rear] = item;
-        } else {
-            rear = (rear + 1) % maxSize;
-            if (rear == front) {
-                System.out.println("Queue is full. Cannot enqueue.");
-
-                rear = (rear - 1 + maxSize) % maxSize;
-            } else {
-                queueArray[rear] = item;
-            }
-        }
-    }
-
-    public int dequeue() {
-        int item = -1;
-
-        if (!isEmpty()) {
-            item = queueArray[front];
-            if (front == rear) {
-                front = -1;
-                rear = -1;
-            } else {
-                front = (front + 1) % maxSize;
-            }
-        } else {
-            System.out.println("Queue is empty. Cannot dequeue.");
-        }
-
-        return item;
-    }
-
-    public int peek() {
-        if (!isEmpty()) {
-            return queueArray[front];
-        } else {
-            System.out.println("Queue is empty. No peek value.");
-            return -1; // Assuming -1 represents an empty value
-        }
-    }
-
-    // Method to check if the circular queue is empty
-    public boolean isEmpty() {
-        return front == -1 && rear == -1;
-    }
-
-    // Main method for testing the CircularQueue class
-    public static void main(String[] args) {
-        CircularQueue circularQueue = new CircularQueue(5);
-
-        circularQueue.enqueue(1);
-        circularQueue.enqueue(2);
-        circularQueue.enqueue(3);
-
-        // Should print 1
-        System.out.println("Peek: " + circularQueue.peek());
-
-        // Should print 1
-        System.out.println("Dequeue: " + circularQueue.dequeue());
-
-        // Should print 2
-        System.out.println("Peek after dequeue: " + circularQueue.peek());
-    }
-}
+import java.util.Scanner;
 
 public class tugas_7 {
 
+    static Scanner sc = new Scanner(System.in);
+
+    static class CircularQueue {
+
+        private final int[] arr;
+        private int front;
+        private int size;
+        private final int capacity;
+
+        public CircularQueue(int cap) {
+            capacity = cap;
+            arr = new int[capacity];
+            front = 0;
+            size = 0;
+        }
+
+        public void enqueue(int x) {
+            if (size == capacity) {
+                System.out.println("Antrian penuh!");
+                return;
+            }
+            int rear = (front + size) % capacity;
+            arr[rear] = x;
+            size++;
+        }
+
+        public int dequeue() {
+            if (size == 0) {
+                System.out.println("Antrian kosong");
+                return -1;
+            }
+            int res = arr[front];
+            front = (front + 1) % capacity;
+            size--;
+            return res;
+        }
+
+        public boolean isEmpty() {
+            return size == 0;
+        }
+
+        public boolean isFull() {
+            return size == capacity;
+        }
+
+        public void print() {
+            if (!isEmpty()) {
+                System.out.print("Antrian: ");
+                for (int i = 0; i < size; i++) {
+                    int idx = (front + i) % capacity;
+                    System.out.print(arr[idx] + " ");
+                }
+            }
+
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        CircularQueue q = new CircularQueue(3);
+
+        boolean play = true;
+        while (play) {
+            System.err.print("Enqueue/dequeue/quit (1/2/0): ");
+            int operation = sc.nextInt();
+
+            switch (operation) {
+                case 1 -> {
+                    System.out.print("Masukkan angka: ");
+                    int n = sc.nextInt();
+                    q.enqueue(n);
+                }
+                case 2 ->
+                    q.dequeue();
+                case 0 ->
+                    play = false;
+            }
+
+            q.print();
+            System.out.print("\n");
+        }
+
+        sc.close();
+    }
 }
